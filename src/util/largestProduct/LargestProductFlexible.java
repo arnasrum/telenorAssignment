@@ -3,8 +3,6 @@ package src.util.largestProduct;
 import java.util.List;
 import java.util.HashSet;
 import java.util.PriorityQueue;
-import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 class Node {
@@ -48,13 +46,13 @@ public class LargestProductFlexible {
         }
         if(depth >= k) {
             if(depth == k && pathProduct > maxProduct) {
-                maxProduct = pathProduct;
+                this.maxProduct = pathProduct;
                 this.factors = factors;
                 this.x = n.x; this.y = n.y;
             }
             return;
         }
-        queue.addAll(adjecentNodes(n));
+        queue.addAll(adjacentNodes(n));
         visited.add(n.x + "," + n.y);
         factors[depth] = grid[n.x][n.y];
         visitNode(queue.poll(), pathProduct * n.value, depth + 1, queue, visited, factors);
@@ -62,26 +60,21 @@ public class LargestProductFlexible {
 
     public long calculate() {
 
-        //long maxProduct = Long.MIN_VALUE;
+        maxProduct = Long.MIN_VALUE;
         var queue = new PriorityQueue<Node>(new NodeCompatator());
 
-        HashSet<String> visited = new HashSet<>();
-        //queue.addAll(adjecentNodes(new Node(i, j, grid[i][j])));
-        int[] nums = new int[k];
-        visitNode(new Node(9, 10, grid[10][10]), grid[10][10], 0, queue, visited, nums);
-
-        //for(int i = 0; i < grid.length; i++) {
-            //for(int j = 0; j < grid[0].length; j++) {
-                //HashSet<String> visited = new HashSet<>();
-                //queue.addAll(adjecentNodes(new Node(i, j, grid[i][j])));
-                //int[] nums = new int[k];
-                //visitNode(new Node(i, j, grid[i][j]), grid[i][j], 0, queue, visited, nums);
-            //}
-        //}
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                HashSet<String> visited = new HashSet<>();
+                int[] nums = new int[k];
+                visitNode(new Node(i, j, grid[i][j]), 1, 0, queue, visited, nums);
+                queue.clear();
+            }
+        }
         return this.maxProduct;
     }
 
-    private List<Node> adjecentNodes(Node node) {
+    private List<Node> adjacentNodes(Node node) {
         Node[] adjecent = {
             new Node(node.x, node.y + 1, horizontal(node.x, node.y, 1)), 
             new Node(node.x, node.y - 1, horizontal(node.x, node.y, -1)), 
