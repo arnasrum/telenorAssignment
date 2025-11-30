@@ -5,9 +5,7 @@ public interface Solution {
     long calculate();
     long calculate(int numThreads);
     void calculate(int rowStart, int rowEnd);
-    int[] getFactors();
-    int getRow();
-    int getColumn();
+    Factor[] getFactors();
     void reset(int[][] grid);
     
 } 

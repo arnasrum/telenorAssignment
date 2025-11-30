@@ -1,47 +1,40 @@
 package src.util.largestProduct;
 
 import src.Solution;
+import src.Factor;
 import src.util.Direction;
 import src.util.concurrent.SolutionWorker;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LargestProductBasic implements Solution {
 
-    int[][] grid;
-    int k;
-    public int[] factors;
-    public int row, column;
+    private int[][] grid;
+    private int k;
+    private Factor[] factors;
     public long maxProduct;
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public LargestProductBasic(int[][] grid) {
         this.grid = grid;
         this.k = 4;
+        this.factors = new Factor[k];
+        this.maxProduct = Long.MIN_VALUE;
     }
 
     public LargestProductBasic(int[][] grid, int k) {
         this.grid = grid;
         this.k = k;
-    }
-
-
-
-    @Override
-    public int getRow() {
-        return this.row;
+        this.factors = new Factor[k];
+        this.maxProduct = Long.MIN_VALUE;
     }
 
     @Override
-    public int getColumn() {
-        return this.column;
-    }
-
-    @Override
-    public int[] getFactors() {
+    public Factor[] getFactors() {
         return this.factors;
     }
 
     @Override
     public void reset(int[][] grid) {
-        row = -1;  column = -1;
         factors = null;
         maxProduct = Long.MIN_VALUE;
         this.grid = grid;
@@ -49,22 +42,21 @@ public class LargestProductBasic implements Solution {
 
     @Override
     public long calculate() {
-        maxProduct = Long.MIN_VALUE;
-        factors = new int[k];
-        for(int i = 0; i < grid.length; i++) {
+        calculate(0, grid.length);
+        return maxProduct;
+    }
+
+    @Override
+    public void calculate(int rowStart, int rowEnd) {
+        for(int i = rowStart; i < rowEnd; i++) {
             for(int j = 0; j < grid[0].length; j++) {
                 for(Direction direction : Direction.values()) {
                     long localProduct = directionalProduct(i, j, direction);
-                    if(localProduct > maxProduct) {
-                        maxProduct = localProduct;
-                        row = i; column = j;
-                        for(int t = 0; t < k; t++)
-                            factors[t] = grid[i + t * direction.x][j + t * direction.y];
-                    }
+                    if(localProduct > maxProduct)
+                        updateMax(i, j, localProduct, direction);
                 }
             }
         }
-        return maxProduct;
     }
 
     private long directionalProduct(int row, int column, Direction direction)  {
@@ -80,14 +72,12 @@ public class LargestProductBasic implements Solution {
 
     @Override
     public long calculate(int numThreads) {
-        
         if(numThreads < 1) 
             throw new RuntimeException("Number of threads cannot be less than 1");
         if(numThreads == 1) 
             return calculate();
 
         maxProduct = Long.MIN_VALUE;
-        factors = new int[k];
 
         var workers = new Thread[numThreads];
         int section = (grid.length / numThreads);
@@ -110,24 +100,15 @@ public class LargestProductBasic implements Solution {
         return maxProduct;
     }
 
-    @Override
-    public void calculate(int rowStart, int rowEnd) {
-        for(int i = rowStart; i < rowEnd; i++) {
-            for(int j = 0; j < grid[0].length; j++) {
-                for(Direction direction : Direction.values()) {
-                    long localProduct = directionalProduct(i, j, direction);
-                        updateMax(i, j, localProduct, direction);
-                }
-            }
-        }
-    }
-
     synchronized void updateMax(int i, int j, long localProduct, Direction direction) {
         if(localProduct > maxProduct) {
             maxProduct = localProduct;
-            row = i; column = j;
-            for(int t = 0; t < k; t++)
-                factors[t] = grid[i + t * direction.x][j + t * direction.y];
+            factors = new Factor[k];
+            for(int t = 0; t < k; t++) {
+                int row = i + t * direction.x;
+                int column = j + t * direction.y; 
+                factors[t] = new Factor(row, column, grid[row][column]);
+            }
         }
     }
 }

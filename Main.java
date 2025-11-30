@@ -1,3 +1,4 @@
+import src.Factor;
 import src.Solution;
 import src.util.GridParser;
 import src.util.largestProduct.LargestProductBasic;
@@ -9,14 +10,13 @@ public class Main {
     
     public static void main(String[] args) {
 
-        System.out.println(Arrays.toString(args));
         Solution solution;
         boolean flexibleMode = false;
         boolean timingEnabled = false;
         String filePath = "";
         int k = 4;
         int numThreads = 1;
-        int median = 30;
+        int median = 7;
 
         for(int i = 0; i < args.length; i++) {
             switch(args[i]) {
@@ -64,16 +64,21 @@ public class Main {
         } else {
             solution = new LargestProductBasic(grid, k);
         }
-        System.out.println(String.format("Max Product: %d | row: %d column: %d | factors: %s", solution.calculate(numThreads), solution.getRow(), solution.getColumn(), Arrays.toString(solution.getFactors())));
+
+        System.out.println(String.format("Max Product: %d", solution.calculate(numThreads)));
+        for(Factor factor : solution.getFactors()) {
+            System.out.println(factor.toString());
+        }
+
         if(timingEnabled)
-            System.out.println(String.format("Time taken of %d median runs: %.2f ms", timeFunctionCall(solution, median), median));
+            System.out.println(String.format("Median time taken of %d runs: %.0f ms", median, timeFunctionCall(solution, median, numThreads)));
     }
 
-    static double timeFunctionCall(Solution obj, int numMedian) {
+    static double timeFunctionCall(Solution obj, int numMedian, int threads) {
         long[] times = new long[numMedian];
         for(int i = 0; i < numMedian; i++) {
             var start = System.nanoTime();
-            obj.calculate();
+            obj.calculate(threads);
             var end = System.nanoTime();
             times[i] = (end - start) / 1000; 
         }

@@ -3,13 +3,14 @@ package src.util.largestProduct;
 import java.util.Arrays;
 
 import src.Solution;
+import src.Factor;
 import src.util.Direction;
 import src.util.concurrent.SolutionWorker;
 
 public class LargestProductFlexible implements Solution {
 
     public int x, y;
-    public int[] factors;
+    public Factor[] factors;
     int[][] grid;
     int k;
     long maxProduct;
@@ -25,17 +26,7 @@ public class LargestProductFlexible implements Solution {
     }
 
     @Override
-    public int getRow() {
-        return x;
-    }
-
-    @Override
-    public int getColumn() {
-        return y;
-    }
-
-    @Override
-    public int[] getFactors() {
+    public Factor[] getFactors() {
         return factors;
     }
 
@@ -61,20 +52,25 @@ public class LargestProductFlexible implements Solution {
     @Override
     public long calculate() {
         maxProduct = Long.MIN_VALUE;
-        for(int i = 0; i < grid.length; i++) {
+        calculate(0, grid.length);
+        return this.maxProduct;
+    }
+
+    @Override
+    public void calculate(int rowStart, int rowEnd) {
+        for(int i = rowStart; i < rowEnd; i++) {
             for(int j = 0; j < grid[0].length; j++) {
                 var visited = new int[2 * k];
                 var visitedGrid = new boolean[grid.length][grid[0].length];
                 Arrays.fill(visited, -1);
-                int[] nums = new int[k];
-                visitNode(i, j, 1, 0, visited, visitedGrid, nums);
+                Factor[] localFactors = new Factor[k];
+                visitNode(i, j, 1, 0, visited, visitedGrid, localFactors);
             }
         }
-        return this.maxProduct;
     }
 
 
-    void visitNode(int currentRow, int currentCol, long pathProduct, int depth, int[] visited, boolean[][] visitedGrid, int[] factors) {
+    void visitNode(int currentRow, int currentCol, long pathProduct, int depth, int[] visited, boolean[][] visitedGrid, Factor[] factors) {
         if(currentRow >= grid.length || currentCol < 0 || currentCol >= grid[0].length)
             return;
         if(visitedGrid[currentRow][currentCol])
@@ -100,7 +96,7 @@ public class LargestProductFlexible implements Solution {
         visited[1 + 2 * depth] = currentCol;
         visitedGrid[currentRow][currentCol] = true;
 
-        factors[depth] = grid[currentRow][currentCol];
+        factors[depth] = new Factor(currentRow, currentCol, grid[currentRow][currentCol]);
         for(Direction direction : Direction.values()) {
             int nextRow = currentRow + direction.x;
             int nextCol = currentCol + direction.y;
@@ -127,7 +123,7 @@ public class LargestProductFlexible implements Solution {
         visitedGrid[currentRow][currentCol] = false;
     }
 
-    synchronized void updateMax(int row, int col, int depth, long pathProduct, int[] factors) {
+    synchronized void updateMax(int row, int col, int depth, long pathProduct, Factor[] factors) {
         if(depth == k && pathProduct > maxProduct) {
             this.maxProduct = pathProduct;
             this.factors = factors.clone();
@@ -165,16 +161,5 @@ public class LargestProductFlexible implements Solution {
         return maxProduct;
     }
 
-    @Override
-    public void calculate(int rowStart, int rowEnd) {
-        for(int i = rowStart; i < rowEnd; i++) {
-            for(int j = 0; j < grid[0].length; j++) {
-                var visited = new int[2 * k];
-                var visitedGrid = new boolean[grid.length][grid[0].length];
-                Arrays.fill(visited, -1);
-                int[] nums = new int[k];
-                visitNode(i, j, 1, 0, visited, visitedGrid, nums);
-            }
-        }
-    }
+
 }
