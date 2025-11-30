@@ -4,7 +4,6 @@ import src.Solution;
 import src.Factor;
 import src.util.Direction;
 import src.util.concurrent.SolutionWorker;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LargestProductBasic implements Solution {
 
@@ -12,7 +11,6 @@ public class LargestProductBasic implements Solution {
     private int k;
     private Factor[] factors;
     public long maxProduct;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public LargestProductBasic(int[][] grid) {
         this.grid = grid;
