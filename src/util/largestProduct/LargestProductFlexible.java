@@ -2,6 +2,8 @@ package src.util.largestProduct;
 
 import src.interfaces.Solution;
 
+import java.util.Arrays;
+
 public class LargestProductFlexible implements Solution {
 
     public int x, y;
@@ -38,7 +40,7 @@ public class LargestProductFlexible implements Solution {
         this.k = k;
     }
 
-    private enum Direction {
+    static private enum Direction {
         HORIZONTAL(0, 1),
         VERTICAL(1, 0),
         POSITIVE_DIAGONAL(1, 1),
@@ -51,18 +53,18 @@ public class LargestProductFlexible implements Solution {
         }
     }
 
-    boolean isVisited(int row, int col, int[][] visited, int depth) {
+    boolean isVisited(int row, int col, int[] visited, int depth) {
         for(int i = 0; i < depth; i++) {
-            if(visited[i][0] == row && visited[i][1] == col)
+            if(visited[0 + 2 * i] == row && visited[1 + 2 * i] == col)
                 return true;
         }
         return false;
     }
     
-    void visitNode(int currentRow, int currentCol, long pathProduct, int depth, int[][] visited, int[] factors) {
+    void visitNode(int currentRow, int currentCol, long pathProduct, int depth, int[] visited, boolean[][] visitedGrid, int[] factors) {
         if(currentRow >= grid.length || currentCol < 0 || currentCol >= grid[0].length)
             return;
-        if(isVisited(currentRow, currentCol, visited, depth))
+        if(visitedGrid[currentRow][currentCol])
             return;
         if(depth >= k) {
             if(depth == k && pathProduct > maxProduct) {
@@ -73,8 +75,9 @@ public class LargestProductFlexible implements Solution {
             return;
         }
 
-        visited[depth][0] = currentRow;
-        visited[depth][1] = currentCol;
+        visited[2 * depth] = currentRow;
+        visited[1 + 2 * depth] = currentCol;
+        visitedGrid[currentRow][currentCol] = true;
 
         factors[depth] = grid[currentRow][currentCol];
         for(Direction direction : Direction.values()) {
@@ -82,23 +85,24 @@ public class LargestProductFlexible implements Solution {
             int nextCol = currentCol + direction.y;
             if(nextRow >= grid.length || nextCol < 0 || nextCol >= grid[0].length)
                 continue;
-            visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, factors);
+            visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, visitedGrid, factors);
         }
 
         for(int i = 0; i < depth; i++) {
-            var visitedRow = visited[i][0];
-            var visitedCol = visited[i][1];
+            var visitedRow = visited[2 * i];
+            var visitedCol = visited[1 + 2 * i];
             for(Direction direction : Direction.values()) {
                 int nextRow = visitedRow + direction.x;
                 int nextCol = visitedCol + direction.y;
                 if(nextRow >= grid.length || nextCol < 0 || nextCol >= grid[0].length)
                     continue;
-                visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, factors);
+                visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, visitedGrid, factors);
             }
         }
 
-        visited[depth][0] = -1;
-        visited[depth][1] = -1;
+        visited[2 * depth] = -1;
+        visited[1 + 2 * depth] = -1;
+        visitedGrid[currentRow][currentCol] = false;
     }
 
     @Override
@@ -106,12 +110,11 @@ public class LargestProductFlexible implements Solution {
         maxProduct = Long.MIN_VALUE;
         for(int i = 0; i < grid.length; i++) {
             for(int j = 0; j < grid[0].length; j++) {
-                var visited = new int[k][2];
-                for(int[] row : visited) {
-                    row[0] = -1; row[1] = -1;
-                }
+                var visited = new int[2 * k];
+                var visitedGrid = new boolean[grid.length][grid[0].length];
+                Arrays.fill(visited, -1);
                 int[] nums = new int[k];
-                visitNode(i, j, 1, 0, visited, nums);
+                visitNode(i, j, 1, 0, visited, visitedGrid, nums);
             }
         }
         return this.maxProduct;
