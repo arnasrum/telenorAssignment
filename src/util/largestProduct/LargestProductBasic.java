@@ -2,7 +2,7 @@ package src.util.largestProduct;
 
 import src.Solution;
 import src.util.Direction;
-import src.util.SolutionWorker;
+import src.util.concurrent.SolutionWorker;
 
 public class LargestProductBasic implements Solution {
 
@@ -80,6 +80,11 @@ public class LargestProductBasic implements Solution {
 
     @Override
     public long calculate(int numThreads) {
+        
+        if(numThreads < 1) 
+            throw new RuntimeException("Number of threads cannot be less than 1");
+        if(numThreads == 1) 
+            return calculate();
 
         maxProduct = Long.MIN_VALUE;
         factors = new int[k];

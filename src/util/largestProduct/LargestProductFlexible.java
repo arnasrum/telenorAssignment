@@ -137,6 +137,12 @@ public class LargestProductFlexible implements Solution {
 
     @Override
     public long calculate(int numThreads) {
+
+        if(numThreads < 1) 
+            throw new RuntimeException("Number of threads cannot be less than 1");
+        if(numThreads == 1) 
+            return calculate();
+
         var workers = new Thread[numThreads];
         int section = (grid.length / numThreads);
         for(int i = 0; i < numThreads; i++) {

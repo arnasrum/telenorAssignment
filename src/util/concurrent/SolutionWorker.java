@@ -1,4 +1,4 @@
-package src.util;
+package src.util.concurrent;
 
 import src.Solution;
 
