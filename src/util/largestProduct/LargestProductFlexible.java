@@ -1,36 +1,6 @@
 package src.util.largestProduct;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.ArrayDeque;
-
 import src.interfaces.Solution;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-
-class Node {
-    int x; 
-    int y;
-    int value;
-
-    public Node(int x, int y, int value) {
-        this.x = x;
-        this.y = y;
-        this.value = value;
-    }
-}
-
-class NodeCompatator implements Comparator<Node> {
-    @Override
-    public int compare(Node n1, Node n2) {
-        return Long.compare(n2.value, n1.value);
-    }
-}
-
 
 public class LargestProductFlexible implements Solution {
 
@@ -81,61 +51,55 @@ public class LargestProductFlexible implements Solution {
         }
     }
     
-    void visitNode(Node n, long pathProduct, int depth, Queue<Node> queue, HashSet<String> visited, int[] factors) {
-        if(n == null) return;
-        String coords = n.x + "," + n.y;
-        if(visited.contains(coords)) {
-            visitNode(queue.poll(), pathProduct, depth, queue, visited, factors);
+    void visitNode(int currentRow, int currentCol, long pathProduct, int depth, boolean[][] visited, int[] factors) {
+        if(currentRow >= grid.length || currentCol < 0 || currentCol >= grid[0].length)
+            return;
+        if(visited[currentRow][currentCol]) {
             return;
         }
         if(depth >= k) {
             if(depth == k && pathProduct > maxProduct) {
                 this.maxProduct = pathProduct;
                 this.factors = factors.clone();
-                this.x = n.x; this.y = n.y;
+                this.x = currentRow; this.y = currentCol;
             }
             return;
         }
-        var adjs = adjacentNodes(n);
-        visited.add(coords);
-        factors[depth] = n.value;
-        for(Node adj : adjs)
-            visitNode(adj, pathProduct * n.value, depth + 1, queue, visited, factors);
-
-        for(String coord: visited.toArray(String[]::new)) {
-            var coords2 = coord.split(",");
-            int a = Integer.parseInt(coords2[0]);
-            int b = Integer.parseInt(coords2[1]);
-            var n2 = new Node(a, b, grid[a][b]);
-            for(Node n3 : adjacentNodes(n2))
-                visitNode(n3, pathProduct * n.value, depth + 1, queue, visited, factors);
+        visited[currentRow][currentCol] = true;
+        factors[depth] = grid[currentRow][currentCol];
+        for(Direction direction : Direction.values()) {
+            int nextRow = currentRow + direction.x;
+            int nextCol = currentCol + direction.y;
+            if(nextRow >= grid.length || nextCol < 0 || nextCol >= grid[0].length)
+                continue;
+            visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, factors);
         }
-        visited.remove(coords);
+
+        for(int i = 0; i < visited.length; i++) {
+            for(int j = 0; j < visited[0].length; j++) {
+                if(!visited[i][j]) continue;
+                for(Direction direction : Direction.values()) {
+                    int nextRow = i + direction.x;
+                    int nextCol = j + direction.y;
+                    if(nextRow >= grid.length || nextCol < 0 || nextCol >= grid[0].length)
+                        continue;
+                    visitNode(nextRow, nextCol, pathProduct * grid[currentRow][currentCol], depth + 1, visited, factors);
+                }
+            }
+        }
+        visited[currentRow][currentCol] = false;
     }
 
     @Override
     public long calculate() {
         maxProduct = Long.MIN_VALUE;
-        var queue = new ArrayDeque<Node>();
         for(int i = 0; i < grid.length; i++) {
             for(int j = 0; j < grid[0].length; j++) {
-                HashSet<String> visited = new HashSet<>();
+                var visited = new boolean[grid.length][grid[0].length];
                 int[] nums = new int[k];
-                visitNode(new Node(i, j, grid[i][j]), 1, 0, queue, visited, nums);
-                queue.clear();
+                visitNode(i, j, 1, 0, visited, nums);
             }
         }
         return this.maxProduct;
-    }
-
-    private List<Node> adjacentNodes(Node node) {
-        var adjacent = new ArrayList<Node>();
-        for(Direction direction : Direction.values()) {
-            var newX = node.x + direction.x;
-            var newY = node.y + direction.y;
-            if(!(newX >= grid.length || newY >= grid[0].length || newY < 0))
-                adjacent.add(new Node(newX, newY, grid[newX][newY]));
-        }
-        return adjacent;
     }
 }
