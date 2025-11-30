@@ -116,7 +116,6 @@ public class LargestProductBasic implements Solution {
             for(int j = 0; j < grid[0].length; j++) {
                 for(Direction direction : Direction.values()) {
                     long localProduct = directionalProduct(i, j, direction);
-                    if(localProduct > maxProduct)
                         updateMax(i, j, localProduct, direction);
                 }
             }
@@ -124,11 +123,11 @@ public class LargestProductBasic implements Solution {
     }
 
     synchronized void updateMax(int i, int j, long localProduct, Direction direction) {
-        maxProduct = localProduct;
-        row = i; column = j;
-        for(int t = 0; t < k; t++)
-            factors[t] = grid[i + t * direction.x][j + t * direction.y];
+        if(localProduct > maxProduct) {
+            maxProduct = localProduct;
+            row = i; column = j;
+            for(int t = 0; t < k; t++)
+                factors[t] = grid[i + t * direction.x][j + t * direction.y];
+        }
     }
-
-
 }
