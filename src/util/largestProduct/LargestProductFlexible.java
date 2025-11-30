@@ -1,8 +1,11 @@
 package src.util.largestProduct;
 
 import java.util.List;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.ArrayDeque;
 
 import src.interfaces.Solution;
 
@@ -78,31 +81,42 @@ public class LargestProductFlexible implements Solution {
         }
     }
     
-    void visitNode(Node n, long pathProduct, int depth, PriorityQueue<Node> queue, HashSet<String> visited, int[] factors) {
+    void visitNode(Node n, long pathProduct, int depth, Queue<Node> queue, HashSet<String> visited, int[] factors) {
         if(n == null) return;
-        if(visited.contains(n.x + "," + n.y)) {
+        String coords = n.x + "," + n.y;
+        if(visited.contains(coords)) {
             visitNode(queue.poll(), pathProduct, depth, queue, visited, factors);
             return;
         }
         if(depth >= k) {
             if(depth == k && pathProduct > maxProduct) {
                 this.maxProduct = pathProduct;
-                this.factors = factors;
+                this.factors = factors.clone();
                 this.x = n.x; this.y = n.y;
             }
             return;
         }
-        queue.addAll(adjacentNodes(n));
-        visited.add(n.x + "," + n.y);
+        var adjs = adjacentNodes(n);
+        visited.add(coords);
         factors[depth] = n.value;
-        visitNode(queue.poll(), pathProduct * n.value, depth + 1, queue, visited, factors);
+        for(Node adj : adjs)
+            visitNode(adj, pathProduct * n.value, depth + 1, queue, visited, factors);
+
+        for(String coord: visited.toArray(String[]::new)) {
+            var coords2 = coord.split(",");
+            int a = Integer.parseInt(coords2[0]);
+            int b = Integer.parseInt(coords2[1]);
+            var n2 = new Node(a, b, grid[a][b]);
+            for(Node n3 : adjacentNodes(n2))
+                visitNode(n3, pathProduct * n.value, depth + 1, queue, visited, factors);
+        }
+        visited.remove(coords);
     }
 
     @Override
     public long calculate() {
         maxProduct = Long.MIN_VALUE;
-        var queue = new PriorityQueue<Node>(new NodeCompatator());
-
+        var queue = new ArrayDeque<Node>();
         for(int i = 0; i < grid.length; i++) {
             for(int j = 0; j < grid[0].length; j++) {
                 HashSet<String> visited = new HashSet<>();
