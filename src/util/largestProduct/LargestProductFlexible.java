@@ -3,6 +3,8 @@ package src.util.largestProduct;
 import java.util.List;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+
+import src.interfaces.Solution;
 import java.util.Comparator;
 
 class Node {
@@ -25,13 +27,36 @@ class NodeCompatator implements Comparator<Node> {
 }
 
 
-public class LargestProductFlexible {
+public class LargestProductFlexible implements Solution {
 
     public int x, y;
     public int[] factors;
     int[][] grid;
     int k;
     long maxProduct;
+
+
+    @Override
+    public void reset() {
+        x = 0; y = 0;
+        factors = null;
+    }
+
+    @Override
+    public int getRow() {
+        return x;
+    }
+
+    @Override
+    public int getColumn() {
+        return y;
+    }
+
+    @Override
+    public int[] getFactors() {
+        return factors;
+    }
+
 
     public LargestProductFlexible(int[][] grid, int k) {
         this.grid = grid;
@@ -58,8 +83,8 @@ public class LargestProductFlexible {
         visitNode(queue.poll(), pathProduct * n.value, depth + 1, queue, visited, factors);
     }
 
+    @Override
     public long calculate() {
-
         maxProduct = Long.MIN_VALUE;
         var queue = new PriorityQueue<Node>(new NodeCompatator());
 
