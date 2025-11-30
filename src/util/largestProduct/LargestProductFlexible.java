@@ -11,6 +11,7 @@ public class LargestProductFlexible implements Solution {
     int[][] grid;
     int k;
     long maxProduct;
+    private int maxAbsValue;
 
 
     @Override
@@ -38,6 +39,7 @@ public class LargestProductFlexible implements Solution {
     public LargestProductFlexible(int[][] grid, int k) {
         this.grid = grid;
         this.k = k;
+        this.maxAbsValue = computeMaxAbsValue(grid);
     }
 
     static private enum Direction {
@@ -53,18 +55,24 @@ public class LargestProductFlexible implements Solution {
         }
     }
 
-    boolean isVisited(int row, int col, int[] visited, int depth) {
-        for(int i = 0; i < depth; i++) {
-            if(visited[0 + 2 * i] == row && visited[1 + 2 * i] == col)
-                return true;
+    private int computeMaxAbsValue(int[][] grid) {
+        var maxValue = Integer.MIN_VALUE;
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(Math.abs(grid[i][j]) > maxValue) {
+                    maxValue = Math.abs(grid[i][j]);
+                }
+            }
         }
-        return false;
+        return maxValue;
     }
     
     void visitNode(int currentRow, int currentCol, long pathProduct, int depth, int[] visited, boolean[][] visitedGrid, int[] factors) {
         if(currentRow >= grid.length || currentCol < 0 || currentCol >= grid[0].length)
             return;
         if(visitedGrid[currentRow][currentCol])
+            return;
+        if(pathProduct == 0 && maxProduct >= 0)
             return;
         if(depth >= k) {
             if(depth == k && pathProduct > maxProduct) {
@@ -75,7 +83,16 @@ public class LargestProductFlexible implements Solution {
             return;
         }
 
-        visited[2 * depth] = currentRow;
+        var remainingSteps = k - depth;
+        var bestCaseProduct = pathProduct;
+        for(int i = 0; i < remainingSteps; i++) {
+            bestCaseProduct *= maxAbsValue;
+            if(bestCaseProduct > maxProduct) break;
+        }
+        if(bestCaseProduct <= maxProduct)
+            return;
+
+        visited[0 + 2 * depth] = currentRow;
         visited[1 + 2 * depth] = currentCol;
         visitedGrid[currentRow][currentCol] = true;
 
@@ -89,7 +106,7 @@ public class LargestProductFlexible implements Solution {
         }
 
         for(int i = 0; i < depth; i++) {
-            var visitedRow = visited[2 * i];
+            var visitedRow = visited[0 + 2 * i];
             var visitedCol = visited[1 + 2 * i];
             for(Direction direction : Direction.values()) {
                 int nextRow = visitedRow + direction.x;
@@ -100,7 +117,7 @@ public class LargestProductFlexible implements Solution {
             }
         }
 
-        visited[2 * depth] = -1;
+        visited[0 + 2 * depth] = -1;
         visited[1 + 2 * depth] = -1;
         visitedGrid[currentRow][currentCol] = false;
     }
