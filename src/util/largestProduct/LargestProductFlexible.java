@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import src.Solution;
 import src.util.Direction;
-import src.util.SolutionWorker;
+import src.util.concurrent.SolutionWorker;
 
 public class LargestProductFlexible implements Solution {
 
