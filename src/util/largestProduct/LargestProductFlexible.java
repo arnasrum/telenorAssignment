@@ -166,8 +166,8 @@ public class LargestProductFlexible implements Solution {
     }
 
     @Override
-    public void calculate(int startRow, int endRow) {
-        for(int i = startRow; i < endRow; i++) {
+    public void calculate(int rowStart, int rowEnd) {
+        for(int i = rowStart; i < rowEnd; i++) {
             for(int j = 0; j < grid[0].length; j++) {
                 var visited = new int[2 * k];
                 var visitedGrid = new boolean[grid.length][grid[0].length];

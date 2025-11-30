@@ -111,8 +111,8 @@ public class LargestProductBasic implements Solution {
     }
 
     @Override
-    public void calculate(int start, int end) {
-        for(int i = start; i < end; i++) {
+    public void calculate(int rowStart, int rowEnd) {
+        for(int i = rowStart; i < rowEnd; i++) {
             for(int j = 0; j < grid[0].length; j++) {
                 for(Direction direction : Direction.values()) {
                     long localProduct = directionalProduct(i, j, direction);

@@ -4,7 +4,7 @@ public interface Solution {
 
     long calculate();
     long calculate(int numThreads);
-    void calculate(int start, int end);
+    void calculate(int rowStart, int rowEnd);
     int[] getFactors();
     int getRow();
     int getColumn();
