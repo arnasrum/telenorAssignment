@@ -5,14 +5,16 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 
 import src.interfaces.Solution;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 
 class Node {
     int x; 
     int y;
-    long value;
+    int value;
 
-    public Node(int x, int y, long value) {
+    public Node(int x, int y, int value) {
         this.x = x;
         this.y = y;
         this.value = value;
@@ -62,9 +64,22 @@ public class LargestProductFlexible implements Solution {
         this.grid = grid;
         this.k = k;
     }
+
+    private enum Direction {
+        HORIZONTAL(0, 1),
+        VERTICAL(1, 0),
+        POSITIVE_DIAGONAL(1, 1),
+        NEGATIVE_DIAGONAL(1, -1);
+
+        final int x, y;
+        Direction(int x, int y) {
+            this.x = x; 
+            this.y = y;
+        }
+    }
     
     void visitNode(Node n, long pathProduct, int depth, PriorityQueue<Node> queue, HashSet<String> visited, int[] factors) {
-        if(n == null || n.value == Long.MIN_VALUE) return;
+        if(n == null) return;
         if(visited.contains(n.x + "," + n.y)) {
             visitNode(queue.poll(), pathProduct, depth, queue, visited, factors);
             return;
@@ -79,7 +94,7 @@ public class LargestProductFlexible implements Solution {
         }
         queue.addAll(adjacentNodes(n));
         visited.add(n.x + "," + n.y);
-        factors[depth] = grid[n.x][n.y];
+        factors[depth] = n.value;
         visitNode(queue.poll(), pathProduct * n.value, depth + 1, queue, visited, factors);
     }
 
@@ -100,37 +115,13 @@ public class LargestProductFlexible implements Solution {
     }
 
     private List<Node> adjacentNodes(Node node) {
-        Node[] adjecent = {
-            new Node(node.x, node.y + 1, horizontal(node.x, node.y, 1)), 
-            new Node(node.x, node.y - 1, horizontal(node.x, node.y, -1)), 
-            new Node(node.x + 1, node.y, vertical(node.x, node.y, 1)), 
-            new Node(node.x + 1, node.y + 1, diagonal(node.x, node.y, 1, 1)),
-            new Node(node.x + 1, node.y - 1, diagonal(node.x, node.y, 1, -1))
-        };
-        return List.of(adjecent);
-    }
-
-    private long horizontal(int row, int column, int direction) {
-        if(column + direction < 0 || column + direction >= grid[0].length)
-            return Long.MIN_VALUE;
-        if(row >= grid.length || row < 0)
-            return Long.MIN_VALUE;
-        return grid[row][column + direction];
-    }
-
-    private long vertical(int row, int column, int direction) {
-        if(row + direction < 0 || row + direction >= grid.length)
-            return Long.MIN_VALUE;
-        if(column < 0 || column >= grid[0].length)
-            return Long.MIN_VALUE;
-        return grid[row + direction][column];
-    }
-    
-    private long diagonal(int row, int column, int vertialDirection, int horizontalDirection) {
-        if(row + vertialDirection < 0 || row + vertialDirection >= grid.length)
-            return Long.MIN_VALUE;
-        if(column + horizontalDirection < 0 || column + horizontalDirection >= grid[0].length)
-            return Long.MIN_VALUE;
-        return grid[row + vertialDirection][column + horizontalDirection];
+        var adjacent = new ArrayList<Node>();
+        for(Direction direction : Direction.values()) {
+            var newX = node.x + direction.x;
+            var newY = node.y + direction.y;
+            if(!(newX >= grid.length || newY >= grid[0].length || newY < 0))
+                adjacent.add(new Node(newX, newY, grid[newX][newY]));
+        }
+        return adjacent;
     }
 }
