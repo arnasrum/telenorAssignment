@@ -5,21 +5,21 @@ import src.Factor;
 import src.util.Direction;
 import src.util.concurrent.SolutionWorker;
 
-public class LargestProductBasic implements Solution {
+public class LargestProductConsecutive implements Solution {
 
     private int[][] grid;
     private int k;
     private Factor[] factors;
     public long maxProduct;
 
-    public LargestProductBasic(int[][] grid) {
+    public LargestProductConsecutive(int[][] grid) {
         this.grid = grid;
         this.k = 4;
         this.factors = new Factor[k];
         this.maxProduct = Long.MIN_VALUE;
     }
 
-    public LargestProductBasic(int[][] grid, int k) {
+    public LargestProductConsecutive(int[][] grid, int k) {
         this.grid = grid;
         this.k = k;
         this.factors = new Factor[k];

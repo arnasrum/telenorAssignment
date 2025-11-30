@@ -1,7 +1,7 @@
 import src.Factor;
 import src.Solution;
 import src.util.GridParser;
-import src.util.largestProduct.LargestProductBasic;
+import src.util.largestProduct.LargestProductConsecutive;
 import src.util.largestProduct.LargestProductFlexible;
 
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class Main {
         if(flexibleMode) {
             solution = new LargestProductFlexible(grid, k);
         } else {
-            solution = new LargestProductBasic(grid, k);
+            solution = new LargestProductConsecutive(grid, k);
         }
 
         System.out.println(String.format("Max Product: %d", solution.calculate(numThreads)));
