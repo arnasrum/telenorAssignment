@@ -5,22 +5,12 @@ import java.io.File;
 
 public class GridParser {
 
-    public static int[][] parseGrid(String filePath) {
+    public static int[][] parse20x20Grid(String filePath) {
 
         var file = new File(filePath);
         try {
-            var fileReader = new Scanner(file);
-            int rowCount = 0;
-            int columnCount = 0;
-            while(fileReader.hasNextLine()) {
-                if(columnCount == 0) {
-                    columnCount = fileReader.nextLine().split(" ").length;
-                } else {
-                    fileReader.nextLine();
-                }
-                rowCount++;
-            }
-            fileReader.close();
+            int rowCount = 20;
+            int columnCount = 20;
             
             var reader = new Scanner(file);
             int[][] grid = new int[rowCount][columnCount];
@@ -34,8 +24,7 @@ public class GridParser {
             reader.close();
             return grid;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }
