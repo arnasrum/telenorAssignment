@@ -1,21 +1,23 @@
+import java.io.IOException;
+
 import src.Factor;
 import src.GridParser;
 import src.LargestProductConsecutive;
-
-import java.io.File;
 
 public class Main {
     
     public static void main(String[] args) {
 
         String filePath = args[0];
+        int[][] grid;
 
-        File file = new File(filePath);
-        if(!file.exists() || !file.canRead()) {
-            throw new RuntimeException("Please provide a valid grid file.");
+        try {
+            grid = GridParser.parseGrid(20, 20, filePath);
+        } catch(IOException exception) {
+            System.err.println("The provided file could not be read.");
+            exception.printStackTrace();
+            return;
         }
-
-        var grid = GridParser.parse20x20Grid(filePath);
 
         var solution = new LargestProductConsecutive(grid);
 

@@ -1,30 +1,31 @@
 package src;
 
-import java.util.Scanner;
-import java.io.File;
+import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class GridParser {
 
-    public static int[][] parse20x20Grid(String filePath) {
+    public static int[][] parseGrid(int n, int m, String filePath) throws IOException, IllegalArgumentException {
 
-        var file = new File(filePath);
-        try {
-            int rowCount = 20;
-            int columnCount = 20;
-            
-            var reader = new Scanner(file);
-            int[][] grid = new int[rowCount][columnCount];
-            int currentRow = 0;
-            while(reader.hasNextLine()) {
-                var nums = reader.nextLine().split(" ");
-                for(int i = 0; i < columnCount; i++)
-                    grid[currentRow][i] = Integer.parseInt(nums[i]);
-                currentRow++;
-            }
-            reader.close();
-            return grid;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+        List<String> lines = Files.readAllLines(Path.of(filePath));
+        if(lines.size() != n) {
+            throw new IllegalArgumentException(String.format("The amount of rows in the input file is not %d.", n));
         }
+        if(lines.get(0).split(" ").length != m) {
+            throw new IllegalArgumentException(String.format("The amount of columns in the input file is not %d.", m));
+        }
+
+        int[][] grid = new int[n][m];
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                var nums = lines.get(i).split(" ");
+                grid[i][j] = Integer.parseInt(nums[j]);
+            }
+        }
+        return grid;
+
     }
 }
