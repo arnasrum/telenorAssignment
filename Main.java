@@ -1,6 +1,6 @@
 import src.Factor;
-import src.util.GridParser;
-import src.util.LargestProductConsecutive;
+import src.GridParser;
+import src.LargestProductConsecutive;
 
 import java.io.File;
 

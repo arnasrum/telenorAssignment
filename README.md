@@ -14,7 +14,7 @@ indices
 ### Compilation
 Compile all Java files using:
 ```bash
-javac -d . *.java
+javac *.java
 ```
 
 ### Running the Application
@@ -26,10 +26,9 @@ java Main grid.txt
 
 ```
 .
-├── Main.java       # Entry point for the application
+├── Main.java           # Entry point for the application
 └── src
-    ├── Factor.java     # Record used for displaying factors of the max product
-    └── util
-        ├── GridParser.java     # Helper class for parsing provided grids
-        └── LargestProductConsecutive.java      # The main solution for the assignment 
+    ├── Factor.java              # Record used for displaying factors of the max product
+    ├── GridParser.java                     # Helper class for parsing provided grids
+    └── LargestProductConsecutive.java      # The main solution for the assignment 
 ```
