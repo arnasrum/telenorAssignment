@@ -4,6 +4,7 @@ import src.LargestProductFlexible;
 import src.Solution;
 import src.util.GridParser;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
@@ -26,19 +27,19 @@ public class Main {
                 case "-k" -> {
                     k = Integer.parseInt(args[++i]);
                     if(k < 1) 
-                        throw new RuntimeException("the argument k cannot be less than 1");
+                        throw new IllegalArgumentException("The argument \"-k\" cannot be less than 1");
                     break;
                 }
                 case "-m" -> {
                     median = Integer.parseInt(args[++i]);
                     if(median < 1) 
-                        throw new RuntimeException("the argument m cannot be less than 1");
+                        throw new IllegalArgumentException("The argument \"-m\" cannot be less than 1");
                     break;
                 }
                 case "-t" -> {
                     numThreads = Integer.parseInt(args[++i]);
                     if(numThreads < 1) 
-                        throw new RuntimeException("the argument \"-t\" cannot be less than 1");
+                        throw new IllegalArgumentException("The argument \"-t\" cannot be less than 1");
                     break;
                 }
                 case "--flexible" -> {
@@ -48,16 +49,20 @@ public class Main {
                     timingEnabled = true;
                 } 
                 default -> {
-                    throw new RuntimeException(String.format("The flag \"%s\" is not recognized", args[i]));
+                    throw new IllegalArgumentException(String.format("The flag \"%s\" is not recognized", args[i]));
                 }
-
-
             }
         }
         if(filePath.isBlank())
-            throw new RuntimeException("please specify the input grid text file path using the \"-i\" flag.");
+            throw new IllegalArgumentException("Please specify the input grid text file path using the \"-i\" flag.");
 
-        var grid = GridParser.parseGrid(filePath);
+        int[][] grid;
+        try {
+            grid = GridParser.parseGrid(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
         if(flexibleMode) {
             solution = new LargestProductFlexible(grid, k);

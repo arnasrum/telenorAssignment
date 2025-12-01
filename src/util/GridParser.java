@@ -1,41 +1,33 @@
 package src.util;
 
-import java.util.Scanner;
-import java.io.File;
+import java.util.List;
+
+import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.Files;
+
 
 public class GridParser {
 
-    public static int[][] parseGrid(String filePath) {
+    public static int[][] parseGrid(String filePath) throws IOException {
 
-        var file = new File(filePath);
-        try {
-            var fileReader = new Scanner(file);
-            int rowCount = 0;
-            int columnCount = 0;
-            while(fileReader.hasNextLine()) {
-                if(columnCount == 0) {
-                    columnCount = fileReader.nextLine().split(" ").length;
-                } else {
-                    fileReader.nextLine();
-                }
-                rowCount++;
-            }
-            fileReader.close();
-            
-            var reader = new Scanner(file);
-            int[][] grid = new int[rowCount][columnCount];
-            int currentRow = 0;
-            while(reader.hasNextLine()) {
-                var nums = reader.nextLine().split(" ");
-                for(int i = 0; i < columnCount; i++)
-                    grid[currentRow][i] = Integer.parseInt(nums[i]);
-                currentRow++;
-            }
-            reader.close();
-            return grid;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+
+        List<String> lines = Files.readAllLines(Path.of(filePath));
+        if(lines.size() < 1) {
+            throw new IllegalArgumentException(String.format("The input file is empty"));
         }
+        int n = lines.size();
+        int m = lines.get(0).split(" ").length;
+
+        int[][] grid = new int[n][m];
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                var nums = lines.get(i).split(" ");
+                if(nums.length != m)
+                    throw new IllegalArgumentException("The provided input file has an inconsistent number of columns");
+                grid[i][j] = Integer.parseInt(nums[j]);
+            }
+        }
+        return grid;
     }
 }
