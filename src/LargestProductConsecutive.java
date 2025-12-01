@@ -1,9 +1,7 @@
-package src.util.largestProduct;
+package src;
 
-import src.Solution;
-import src.Factor;
 import src.util.Direction;
-import src.util.concurrent.SolutionWorker;
+import src.util.SolutionWorker;
 
 public class LargestProductConsecutive implements Solution {
 

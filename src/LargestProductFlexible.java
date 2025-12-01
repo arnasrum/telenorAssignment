@@ -1,11 +1,9 @@
-package src.util.largestProduct;
+package src;
 
 import java.util.Arrays;
 
-import src.Solution;
-import src.Factor;
 import src.util.Direction;
-import src.util.concurrent.SolutionWorker;
+import src.util.SolutionWorker;
 
 public class LargestProductFlexible implements Solution {
 

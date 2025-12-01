@@ -1,8 +1,8 @@
 import src.Factor;
+import src.LargestProductConsecutive;
+import src.LargestProductFlexible;
 import src.Solution;
 import src.util.GridParser;
-import src.util.largestProduct.LargestProductConsecutive;
-import src.util.largestProduct.LargestProductFlexible;
 
 import java.util.Arrays;
 

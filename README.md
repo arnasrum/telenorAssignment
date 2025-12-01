@@ -24,7 +24,7 @@ Although the assignment has given us some constraints, I have chosen to take som
 ### Compilation
 Compile all Java files using:
 ```bash
-javac -d . *.java
+javac *.java
 ```
 
 ### Running the Application
@@ -46,17 +46,14 @@ java Main -i grid.txt
 ## Project Structure
 ```
 .
-├── Main.java                          # Entry point of the application
+├── Main.java                               # Entry point of the application
 └── src
-    ├── Factor.java                    # Represents a number in the grid
-    ├── Solution.java                  # Interface for the solutions
+    ├── Factor.java                         # Represents a number in the grid
+    ├── LargestProductConsecutive.java      # Finds max product of k consecutive numbers
+    ├── LargestProductFlexible.java         # Finds max product of any adjacent k numbers
+    ├── Solution.java                       # Interface for the solutions
     └── util
-        ├── concurrent
-        │   └── SolutionWorker.java    # Multi-threading worker for parallel processing
-        ├── Direction.java             # Enum for search directions (horizontal, vertical, positive diagonal, negative diagonal)
-        ├── GridParser.java            # Parses .txt files into 2D grid 
-        └── largestProduct
-            ├── LargestProductConsecutive.java      # Finds max product of exactly k consecutive numbers
-            └── LargestProductFlexible.java         # Finds max product of any adjacent k numbers
+        ├── Direction.java          # Enum for search directions (horizontal, vertical, positive diagonal, negative diagonal)
+        ├── GridParser.java         # Parses .txt files into 2D grid
+        └── SolutionWorker.java     # Multi-threading worker for parallel computation
 ```
-
