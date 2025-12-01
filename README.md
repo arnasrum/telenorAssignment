@@ -37,7 +37,7 @@ java Main grid.txt
 .
 ├── Main.java           # Entry point for the application
 └── src
-    ├── Factor.java              # Record used for displaying factors of the max product
+    ├── Factor.java                         # Record used for displaying factors of the max product
     ├── GridParser.java                     # Helper class for parsing provided grids
     └── LargestProductConsecutive.java      # The main solution for the assignment 
 ```
