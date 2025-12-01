@@ -12,12 +12,12 @@ A Java application that finds the largest product of four consecutive numbers in
 
 An alternate branch `assignment-extended` was implemented that has features that go beyond the requirements of this assignment.
 
-
-
 ## Usage
 
+**Requirements:** Java 21 (earlier versions might work)
+
 ### Input Format
-The input file should contain 20x20 grid of space-seperated integers:
+The input file should contain 20x20 grid of space-separated integers:
 ```
 14 94 80 21 62 10 ...
 57 24 31 68 90 82 ...
@@ -45,7 +45,7 @@ row: 18 | column: 15 | value: 99
 .
 ├── Main.java           # Entry point for the application
 └── src
-    ├── Factor.java                         # Record used for displaying factors of the max product
+    ├── Factor.java                         # Record representing a number in the grid (row, column, value) 
     ├── GridParser.java                     # Helper class for parsing provided grids
     └── LargestProductConsecutive.java      # The main solution for the assignment 
 ```
