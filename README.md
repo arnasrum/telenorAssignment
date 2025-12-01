@@ -8,7 +8,9 @@ A Java application that finds the largest product of four consecutive numbers in
 An alternate branch was implemented that has features that go beyond the requirements of this assignment.
 
 **General Adjacency:** The soluiton is capable of finding the largest product of `k` adjacent numbers, not only consecutive numbers. 
+
 **Multi-threading:** To support efficient computing of large grids, the solution has an option for multi-threading.
+
 **Timing:** The solution has built-in option for timing the solutions.
 
 ## Assignment Requirements
