@@ -3,32 +3,40 @@
 ## Overview
 A Java application that finds the largest product of four consecutive numbers in a 20x20 grid. 
 
-## Alternate Implementation
-
-An alternate branch was implemented that has features that go beyond the requirements of this assignment.
-
-**General Adjacency:** The soluiton is capable of finding the largest product of `k` adjacent numbers, not only consecutive numbers. 
-
-**Multi-threading:** To support efficient computing of large grids, the solution has an option for multi-threading.
-
-**Timing:** The solution has built-in option for timing the solutions.
-
 ## Assignment Requirements
 
 1. Parse the file into a suitable format
-2. Find 4 consecutive numbers that make up the largest product and their indicies.
+2. Find 4 consecutive numbers that make up the largest product and their indices.
+
+### Alternate Implementation
+
+An alternate branch `assignment-extended` was implemented that has features that go beyond the requirements of this assignment.
+
+
 
 ## Usage
 
-### Compilation
-Compile all Java files using:
-```bash
-javac *.java
+### Input Format
+The input file should contain 20x20 grid of space-seperated integers:
+```
+14 94 80 21 62 10 ...
+57 24 31 68 90 82 ...
+...
 ```
 
-### Running the Application
+### Running
 ```bash
+javac Main.java
 java Main grid.txt
+```
+
+### Example Output
+```
+Max Product: 93168306
+row: 15 | column: 18 | value: 98
+row: 16 | column: 17 | value: 99
+row: 17 | column: 16 | value: 97
+row: 18 | column: 15 | value: 99
 ```
 
 ## Project Structure
