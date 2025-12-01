@@ -8,13 +8,15 @@ public class Main {
     
     public static void main(String[] args) {
 
+        if(args.length < 1) {
+            throw new IllegalArgumentException("Please specify the input file as the first positional argument.");
+        }
         String filePath = args[0];
         int[][] grid;
 
         try {
             grid = GridParser.parseGrid(20, 20, filePath);
         } catch(IOException exception) {
-            System.err.println("The provided file could not be read.");
             exception.printStackTrace();
             return;
         }
