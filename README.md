@@ -5,7 +5,7 @@ A Java application that finds the largest product of four consecutive numbers in
 
 ## Assignment Requirements
 
-1. Parse the file into a suitable format
+1. Parse a file containing a 20x20 grid into a suitable format
 2. Find 4 consecutive numbers that make up the largest product and their indices.
 
 ### Alternate Implementation
