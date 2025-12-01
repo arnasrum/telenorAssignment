@@ -101,7 +101,6 @@ public class LargestProductConsecutive implements Solution {
     synchronized void updateMax(int i, int j, long localProduct, Direction direction) {
         if(localProduct > maxProduct) {
             maxProduct = localProduct;
-            factors = new Factor[k];
             for(int t = 0; t < k; t++) {
                 int row = i + t * direction.x;
                 int column = j + t * direction.y; 
